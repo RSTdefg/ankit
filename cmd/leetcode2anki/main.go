@@ -2,13 +2,10 @@ package main
 
 import (
 	"flag"
-	"go/format"
-	"go/parser"
-	"go/token"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 
 	"github.com/RSTdefg/ankit"
@@ -30,32 +27,28 @@ func init() {
 }
 
 func question(path string, info os.FileInfo) (leetcode.Key, error) {
-	if path == "." || !info.IsDir() {
+	if path == "." {
 		return nil, nil
 	}
-
-	id, err := strconv.Atoi(path)
-	if err != nil {
+	// skip directory in repository
+	if info.IsDir() {
 		return nil, filepath.SkipDir
 	}
 
-	return leetcode.KeyID(id), filepath.SkipDir
+	filename := filepath.Base(path)
+	ext := filepath.Ext(filename)
+	// only handle python file
+	if ext != ".py" {
+		return nil, nil
+	}
+	// identify leetcode question by title slug: filename
+	slug := strings.TrimSuffix(filename, ext)
+	return leetcode.KeyTitleSlug(slug), nil
 }
 
 func code(path string, _ leetcode.Lang) (string, error) {
-	fset := token.NewFileSet()
-
-	f, err := parser.ParseFile(fset, filepath.Join(path, "code.go"), nil, parser.ParseComments)
-	if err != nil {
-		return "", err
-	}
-
-	var w strings.Builder
-	if err := format.Node(&w, fset, f.Decls); err != nil {
-		return "", err
-	}
-
-	return w.String(), nil
+	b, err := ioutil.ReadFile(path)
+	return string(b), err
 }
 
 func main() {
