@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/invzhi/ankit"
-	"github.com/invzhi/ankit/leetcode"
+	"github.com/RSTdefg/ankit"
+	"github.com/RSTdefg/ankit/leetcode"
 )
 
 var (
@@ -21,6 +21,7 @@ var (
 )
 
 func init() {
+	log.Print("leetcode2anki v0.1.0")
 	flag.StringVar(&cfg.Path, "path", ".", "leetcode repo path")
 	flag.StringVar(&cfg.Source, "db", "leetcode.db", "sqlite3 filename")
 	flag.StringVar(&cfg.Lang, "lang", "golang", "programming language")

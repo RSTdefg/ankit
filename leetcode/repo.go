@@ -186,12 +186,13 @@ func (r *Repo) mustLoadKeys() {
 func (r *Repo) loadKeys() error {
 	const url = "https://leetcode.com/api/problems/all/"
 
-	log.Print("fetching id and title_slug from leetcode api...")
+	log.Print("fetching id and title_slug from leetcode apii...")
 
 	resp, err := r.client.Get(url)
 	if err != nil {
 		return err
 	}
+	log.Print(resp)
 	defer resp.Body.Close()
 
 	var questions struct {
